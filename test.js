@@ -8,7 +8,7 @@ self.addEventListener('fetch', event => {
 
   if (url.pathname.includes('.txt')) {
     event.respondWith(
-      fetch('/geometrydashdotcom/2.txt')
+      fetch('/geometrydashdotcom/assets/2.txt')
     );
   }
 });
