@@ -37,9 +37,9 @@
 
 <body>
 
-  <button onclick="loadLevel(1)">Stereo Madness</button>
-  <button onclick="loadLevel(2)">Every End</button>
-  <button onclick="loadLevel(3)">Level Easy</button>
+  <button onclick="loadLevel('SM')">Stereo Madness</button>
+  <button onclick="loadLevel('EE')">Every End</button>
+  <button onclick="const id = prompt('Enter level ID:');loadLevel(id)">Custom Level (from gd servers)</button>
 
   <script>
     function loadLevel(id) {
