@@ -56,5 +56,13 @@ async function handleLevelRequest() {
     });
     return;
   }
+  if (text.trim() === "error code: 1015") {
+    self.clients.matchAll().then((clients) => {
+      for (const client of clients) {
+        client.postMessage({ type: "rate-limit" });
+      }
+    });
+    return;
+  }
   return new Response(text);
 }
