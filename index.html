@@ -3,216 +3,339 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Geometry Dash</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>Geometry Dash Menu</title>
   <style>
+    /* Loading Pusab Font */
+    @font-face {
+      font-family: 'Pusab';
+      src: url('https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Pusab%20full.woff2') format('woff2');
+    }
+
     :root {
-      --bg-color: #0a0a0a;
-      --card-bg: #1a1a1a;
-      --accent-color: #007bff;
-      --text-color: #ffffff;
-      --demon-red: #ff4d4d;
+      --bg-blue: #2854cf;
+      --bg-blue-dark: #112661;
+      --panel-brown: #bc6d3d;
+      --panel-brown-dark: #a1582c;
+      --every-end-blue: #050a1a; 
+
+      /* GD Text Style: Black stroke + Black offset shadow */
+      --gd-text-stroke: 1.5px black;
+      --gd-text-shadow: 3px 3px 0px rgba(0,0,0,1);
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg-color);
-      color: var(--text-color);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle, var(--bg-blue) 0%, var(--bg-blue-dark) 100%);
+      color: white;
+      font-family: 'Pusab', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
     }
 
     nav {
-      width: 100%;
-      background: #111;
+      position: absolute;
+      top: 20px;
       display: flex;
-      justify-content: center;
-      padding: 15px 0;
-      border-bottom: 2px solid #333;
-      margin-bottom: 40px;
+      gap: 15px;
+      z-index: 100;
     }
 
     .tab-btn {
-      background: none;
-      border: none;
-      color: #888;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 10px 30px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .tab-btn.active {
-      color: var(--text-color);
-      border-bottom: 2px solid var(--accent-color);
-    }
-
-    .tab-content {
-      display: none;
-      width: 90%;
-      max-width: 800px;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .tab-content.active {
-      display: flex;
-      padding-bottom: 20px;
-    }
-
-    button.level-btn {
-      width: 100%;
-      padding: 20px;
-      font-size: 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: var(--card-bg);
+      background: rgba(0, 0, 0, 0.7);
+      border: 3px solid white;
       color: white;
-      transition: 0.2s;
-      border-left: 5px solid var(--accent-color);
+      font-family: 'Pusab', sans-serif;
+      font-size: 14px;
+      padding: 8px 25px;
+      cursor: pointer;
+      border-radius: 4px;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 2px 2px 0px black;
     }
 
-    button.level-btn:hover {
-      background: #252525;
-      transform: translateX(10px);
+    .tab-btn.active { background: #ffaa00; }
+
+    .game-window {
+      position: relative;
+      width: 90vw;
+      max-width: 950px;
+      aspect-ratio: 16 / 9;
     }
 
-    .demon-item {
+    .content-viewport {
+      position: absolute;
+      top: 6.5%; 
+      left: 5%;
+      right: 5%;
+      bottom: 8.5%;
+      z-index: 1; 
+      background: #8e4f2b; 
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      display: none; 
+    }
+
+    .content-viewport.active { display: flex; flex-direction: column; }
+    .content-viewport::-webkit-scrollbar { display: none; }
+
+    .hub-frame-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      background: var(--card-bg);
-      padding: 15px 25px;
-      border-radius: 8px;
+      height: 100%;
+      background: url('https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Hubv2.png');
+      background-size: 100% 100%;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .level-item {
+      height: 33.33%; 
+      flex-shrink: 0;
+      background: var(--panel-brown);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border-left: 5px solid var(--demon-red);
-      cursor: pointer;
-      transition: 0.2s;
+      padding: 0 30px;
+      border-bottom: 2.5px solid rgba(0,0,0,0.3);
       box-sizing: border-box;
     }
 
-    .demon-item:hover {
-      background: #221010;
-      transform: scale(1.02);
-    }
+    .level-item:nth-child(even) { background: var(--panel-brown-dark); }
+    .import-style { background: #468d49 !important; }
+    .every-end-style { background: var(--every-end-blue) !important; border-bottom: 2.5px solid #000 !important; }
 
-    .demon-rank {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--demon-red);
+    /* Difficulty Face Styling */
+    .difficulty-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
       margin-right: 20px;
-      min-width: 40px;
     }
 
-    .demon-info {
+    .difficulty-face {
+      width: 55px;
+      height: auto;
+    }
+
+    .difficulty-label {
+      font-size: 10px;
+      margin-top: 4px;
+      text-transform: uppercase;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 1px 1px 0px black;
+    }
+
+    .level-main-info {
       flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
 
-    .demon-name {
+    .level-name {
+      font-size: 26px;
+      margin: 0;
+      text-transform: uppercase;
+      -webkit-text-stroke: var(--gd-text-stroke);
+      text-shadow: var(--gd-text-shadow);
+    }
+
+    .level-creator {
+      font-size: 16px;
+      color: #fdc416;
+      -webkit-text-stroke: var(--gd-text-stroke);
+      text-shadow: var(--gd-text-shadow);
+      margin-top: 3px;
+    }
+
+    .play-btn {
+      width: 105px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 0.1s;
+    }
+    .play-btn:hover { transform: scale(1.05); }
+
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 75px;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    #prev-btn { left: -90px; transform: translateY(-50%) scaleX(-1); }
+    #next-btn { right: -90px; }
+
+    .page-indicator {
+      position: absolute;
+      top: -35px;
+      right: 10px;
       font-size: 20px;
-      font-weight: bold;
-      display: block;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 2px 2px 0px black;
     }
 
-    .demon-creator {
-      font-size: 14px;
-      color: #aaa;
-    }
-
-    .demon-record {
-      font-size: 18px;
-      font-weight: bold;
-      color: var(--accent-color);
-      margin-left: 20px;
-      min-width: 60px;
-      text-align: right;
-    }
-    .custom-input {
-      background: #333 !important;
-      border-left: 5px solid #00ff88 !important;
-    }
+    .demon-container { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+    .demon-title { font-size: 32px; -webkit-text-stroke: var(--gd-text-stroke); text-shadow: var(--gd-text-shadow); }
+    .demon-desc { font-size: 18px; color: #fdc416; -webkit-text-stroke: var(--gd-text-stroke); text-shadow: var(--gd-text-shadow); }
+    .demon-link { color: #00ffff !important; text-decoration: underline; }
   </style>
 </head>
 
 <body>
 
   <nav>
-    <button class="tab-btn active" onclick="openTab('levels')">LEVELS</button>
-    <button class="tab-btn" onclick="openTab('demonlist')">WBDL</button>
+    <button id="tab-levels" class="tab-btn active" onclick="openTab('levels')">LEVELS</button>
+    <button id="tab-demonlist" class="tab-btn" onclick="openTab('demonlist')">WBDL</button>
   </nav>
 
-  <div id="levels" class="tab-content active">
-    <button class="level-btn custom-input" onclick="promptLevel()">Custom Level (from GD servers)</button>
-    <button class="level-btn" onclick="loadLevel('-1')">Stereo Madness</button>
-    <button class="level-btn" onclick="loadLevel('-2')">Back on Track</button>
-    <button class="level-btn" onclick="loadLevel('-3')">Polargeist</button>
-    <button class="level-btn" onclick="loadLevel('-4')">Dry Out</button>
-    <button class="level-btn" onclick="loadLevel('-5')">Base after Base</button>
-    <button class="level-btn" onclick="loadLevel('-6')">Cant Let Go</button>
-    <button class="level-btn" onclick="loadLevel('-7')">Jumper</button>
-    <button class="level-btn" onclick="loadLevel('-8')">Time Machine</button>
-    <button class="level-btn" onclick="loadLevel('-9')">Cycles</button>
-    <button class="level-btn" onclick="loadLevel('-10')">xStep</button>
-    <button class="level-btn" onclick="loadLevel('-11')">Clutterfunk</button>
-    <button class="level-btn" onclick="loadLevel('-12')">Theory of Everything</button>
-    <button class="level-btn" onclick="loadLevel('-13')">Electroman Adventures</button>
-    <button class="level-btn" onclick="loadLevel('-14')">Clubstep</button>
-    <button class="level-btn" onclick="loadLevel('-15')">Electrodynamix</button>
-    <button class="level-btn" onclick="loadLevel('-16')">Hexagon Force</button>
-    <button class="level-btn" onclick="loadLevel('-17')">Blast Processing</button>
-    <button class="level-btn" onclick="loadLevel('-18')">Theory of Everything 2</button>
-    <button class="level-btn" onclick="loadLevel('-19')">Geometrical Dominator</button>
-    <button class="level-btn" onclick="loadLevel('-20')">Deadlocked</button>
-    <button class="level-btn" onclick="loadLevel('-21')">Fingerdash</button>
-    <button class="level-btn" onclick="loadLevel('-22')">Dash</button>
-    <button class="level-btn" onclick="loadLevel('-23')">Every End</button>
+  <div class="game-window">
+    <div class="page-indicator" id="page-text">PAGE 1</div>
+    <div class="hub-frame-overlay"></div>
+
+    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
+    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
+
+    <div id="level-list" class="content-viewport active"></div>
+
+    <div id="demonlist-content" class="content-viewport">
+      <div class="demon-container">
+        <h2 class="demon-title">Web Browser Demonlist</h2>
+        <p class="demon-desc">Visit the <a href="https://webdemonlist.org/" target="_blank" class="demon-link">WBDL website</a><br>to see the rankings :O</p>
+      </div>
+    </div>
   </div>
 
-  <div id="demonlist" class="tab-content">
-     <h3>Web Browser Demonlist</h3>
-     <p>Visit the <a href="https://webdemonlist.org" target="_blank">WBDL website</a> to see the rankings :O</p>
-   </div>
-
   <script>
+    const faces = {
+      easy: "https://geometrydash.wiki.gg/images/Easy.png",
+      normal: "https://geometrydash.wiki.gg/images/Normal.png",
+      hard: "https://geometrydash.wiki.gg/images/Hard.png",
+      harder: "https://geometrydash.wiki.gg/images/Harder.png",
+      insane: "https://geometrydash.wiki.gg/images/Insane.png",
+      easyDemon: "https://geometrydash.wiki.gg/images/EasyDemon.png",
+      extremeDemon: "https://geometrydash.wiki.gg/images/ExtremeDemon.png"
+    };
+
+    const levels = [
+      { name: "Import Level", creator: "Custom ID", id: "custom", style: "import-style", face: faces.normal, diff: "NA" },
+      { name: "Stereo Madness", creator: "RobTop", id: "-1", face: faces.easy, diff: "Easy" },
+      { name: "Back on Track", creator: "RobTop", id: "-2", face: faces.easy, diff: "Easy" },
+      { name: "Polargeist", creator: "RobTop", id: "-3", face: faces.normal, diff: "Normal" },
+      { name: "Dry Out", creator: "RobTop", id: "-4", face: faces.normal, diff: "Normal" },
+      { name: "Base after Base", creator: "RobTop", id: "-5", face: faces.hard, diff: "Hard" },
+      { name: "Cant Let Go", creator: "RobTop", id: "-6", face: faces.hard, diff: "Hard" },
+      { name: "Jumper", creator: "RobTop", id: "-7", face: faces.harder, diff: "Harder" },
+      { name: "Time Machine", creator: "RobTop", id: "-8", face: faces.harder, diff: "Harder" },
+      { name: "Cycles", creator: "RobTop", id: "-9", face: faces.harder, diff: "Harder" },
+      { name: "xStep", creator: "RobTop", id: "-10", face: faces.insane, diff: "Insane" },
+      { name: "Clutterfunk", creator: "RobTop", id: "-11", face: faces.insane, diff: "Insane" },
+      { name: "Theory of Everything", creator: "RobTop", id: "-12", face: faces.insane, diff: "Insane" },
+      { name: "Electroman Adventures", creator: "RobTop", id: "-13", face: faces.insane, diff: "Insane" },
+      { name: "Clubstep", creator: "RobTop", id: "-14", face: faces.easyDemon, diff: "Demon" },
+      { name: "Electrodynamix", creator: "RobTop", id: "-15", face: faces.insane, diff: "Insane" },
+      { name: "Hexagon Force", creator: "RobTop", id: "-16", face: faces.insane, diff: "Insane" },
+      { name: "Blast Processing", creator: "RobTop", id: "-17", face: faces.harder, diff: "Harder" },
+      { name: "Theory of Everything 2", creator: "RobTop", id: "-18", face: faces.easyDemon, diff: "Demon" },
+      { name: "Geometrical Dominator", creator: "RobTop", id: "-19", face: faces.harder, diff: "Harder" },
+      { name: "Deadlocked", creator: "RobTop", id: "-20", face: faces.easyDemon, diff: "Demon" },
+      { name: "Fingerdash", creator: "RobTop", id: "-21", face: faces.insane, diff: "Insane" },
+      { name: "Dash", creator: "RobTop", id: "-22", face: faces.insane, diff: "Insane" },
+      { name: "Every End", creator: "RobTop", id: "-23", style: "every-end-style", face: faces.extremeDemon, diff: "Extreme" }
+    ];
+
+    let currentPage = 0;
+    const itemsPerPage = 10;
+    let currentTab = 'levels';
+
+    function renderPage() {
+      const container = document.getElementById('level-list');
+      container.innerHTML = '';
+      container.scrollTop = 0; 
+      
+      const start = currentPage * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = levels.slice(start, end);
+
+      pageItems.forEach(item => {
+        const row = document.createElement('div');
+        row.className = `level-item ${item.style || ''}`;
+        
+        row.innerHTML = `
+          <div class="difficulty-container">
+            <img src="${item.face}" class="difficulty-face">
+            <span class="difficulty-label">${item.diff}</span>
+          </div>
+          <div class="level-main-info">
+            <p class="level-name">${item.name}</p>
+            <span class="level-creator">BY ${item.creator.toUpperCase()}</span>
+          </div>
+          <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Play%20button.webp" 
+               class="play-btn" onclick="handleInteraction('${item.id}')">
+        `;
+        container.appendChild(row);
+      });
+
+      updateUI(end);
+    }
+
+    function updateUI(endIndex) {
+      if (currentTab === 'levels') {
+        document.getElementById('page-text').style.display = 'block';
+        document.getElementById('page-text').innerText = `PAGE ${currentPage + 1}`;
+        document.getElementById('prev-btn').style.display = currentPage === 0 ? 'none' : 'block';
+        document.getElementById('next-btn').style.display = (endIndex && endIndex >= levels.length) ? 'none' : 'block';
+      } else {
+        document.getElementById('page-text').style.display = 'none';
+        document.getElementById('prev-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+      }
+    }
+
     function openTab(tabName) {
-      const contents = document.getElementsByClassName("tab-content");
-      for (let content of contents) {
-        content.classList.remove("active");
-      }
+      currentTab = tabName;
+      document.querySelectorAll('.content-viewport').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-      const tabs = document.getElementsByClassName("tab-btn");
-      for (let tab of tabs) {
-        tab.classList.remove("active");
+      if (tabName === 'levels') {
+        document.getElementById('level-list').classList.add('active');
+        document.getElementById('tab-levels').classList.add('active');
+        renderPage();
+      } else {
+        document.getElementById('demonlist-content').classList.add('active');
+        document.getElementById('tab-demonlist').classList.add('active');
+        updateUI();
       }
+    }
 
-      document.getElementById(tabName).classList.add("active");
-      event.currentTarget.classList.add("active");
+    function changePage(dir) {
+      currentPage += dir;
+      renderPage();
+    }
+
+    function handleInteraction(id) {
+      if (id === 'custom') {
+        const val = prompt("Enter Level ID:");
+        if (val && !isNaN(val)) loadLevel(val);
+      } else {
+        loadLevel(id);
+      }
     }
 
     function loadLevel(id) {
       window.location.href = `/geometrydashdotcom/game?id=${id}`;
     }
 
-    function promptLevel() {
-      const id = prompt('Enter level ID:');
-      if (id === null) return;
-      const num = Number(id.trim());
-      if (!Number.isInteger(num)) {
-        alert('Invalid Level ID...');
-        return;
-      }
-      if (id.trim() === '') {
-        alert('Please enter a Level ID');
-      } else {
-        loadLevel(id);
-      }
-    }
+    renderPage();
   </script>
 </body>
 </html>
