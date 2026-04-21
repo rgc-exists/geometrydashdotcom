@@ -14,11 +14,8 @@
     :root {
       --bg-blue: #2854cf;
       --bg-blue-dark: #112661;
-      
       --panel-brown: #bc6d3d;
       --panel-brown-dark: #a1582c;
-      
-      /* Every End Specific Color */
       --every-end-blue: #050a1a; 
 
       /* GD Text Style: Black stroke + Black offset shadow */
@@ -29,7 +26,6 @@
     body {
       margin: 0;
       min-height: 100vh;
-      /* Reverted to original blue gradient */
       background: radial-gradient(circle, var(--bg-blue) 0%, var(--bg-blue-dark) 100%);
       color: white;
       font-family: 'Pusab', sans-serif;
@@ -41,7 +37,6 @@
       user-select: none;
     }
 
-    /* Navigation */
     nav {
       position: absolute;
       top: 20px;
@@ -63,11 +58,8 @@
       text-shadow: 2px 2px 0px black;
     }
 
-    .tab-btn.active {
-      background: #ffaa00;
-    }
+    .tab-btn.active { background: #ffaa00; }
 
-    /* Game Window Wrapper */
     .game-window {
       position: relative;
       width: 90vw;
@@ -75,7 +67,6 @@
       aspect-ratio: 16 / 9;
     }
 
-    /* The Content Area (Behind the Frame) */
     .content-viewport {
       position: absolute;
       top: 6.5%; 
@@ -90,16 +81,9 @@
       display: none; 
     }
 
-    .content-viewport.active {
-      display: flex;
-      flex-direction: column;
-    }
+    .content-viewport.active { display: flex; flex-direction: column; }
+    .content-viewport::-webkit-scrollbar { display: none; }
 
-    .content-viewport::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* The Hub Frame (ON TOP) */
     .hub-frame-overlay {
       position: absolute;
       top: 0;
@@ -112,50 +96,65 @@
       pointer-events: none;
     }
 
-    /* Level Rows (Exactly 3 visible at a time) */
     .level-item {
       height: 33.33%; 
       flex-shrink: 0;
       background: var(--panel-brown);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
+      padding: 0 30px;
       border-bottom: 2.5px solid rgba(0,0,0,0.3);
       box-sizing: border-box;
     }
 
-    .level-item:nth-child(even) {
-      background: var(--panel-brown-dark);
-    }
-
-    /* Special Item Colors */
+    .level-item:nth-child(even) { background: var(--panel-brown-dark); }
     .import-style { background: #468d49 !important; }
     .every-end-style { background: var(--every-end-blue) !important; border-bottom: 2.5px solid #000 !important; }
 
-    /* GD Stylized Text */
-    .level-name, .demon-title {
-      font-size: 30px;
+    /* Difficulty Face Styling */
+    .difficulty-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
+      margin-right: 20px;
+    }
+
+    .difficulty-face {
+      width: 55px;
+      height: auto;
+    }
+
+    .difficulty-label {
+      font-size: 10px;
+      margin-top: 4px;
+      text-transform: uppercase;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 1px 1px 0px black;
+    }
+
+    .level-main-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .level-name {
+      font-size: 26px;
       margin: 0;
       text-transform: uppercase;
       -webkit-text-stroke: var(--gd-text-stroke);
       text-shadow: var(--gd-text-shadow);
     }
 
-    .level-creator, .demon-desc {
-      font-size: 18px;
+    .level-creator {
+      font-size: 16px;
       color: #fdc416;
       -webkit-text-stroke: var(--gd-text-stroke);
       text-shadow: var(--gd-text-shadow);
-      margin-top: 5px;
+      margin-top: 3px;
     }
 
-    .demon-link {
-      color: #00ffff !important;
-      text-decoration: underline;
-    }
-
-    /* Play Button (No Glow) */
     .play-btn {
       width: 105px;
       cursor: pointer;
@@ -164,18 +163,6 @@
     }
     .play-btn:hover { transform: scale(1.05); }
 
-    /* WBDL Container */
-    .demon-container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-    }
-
-    /* Pagination Arrows */
     .nav-arrow {
       position: absolute;
       top: 50%;
@@ -196,6 +183,11 @@
       -webkit-text-stroke: 1px black;
       text-shadow: 2px 2px 0px black;
     }
+
+    .demon-container { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+    .demon-title { font-size: 32px; -webkit-text-stroke: var(--gd-text-stroke); text-shadow: var(--gd-text-shadow); }
+    .demon-desc { font-size: 18px; color: #fdc416; -webkit-text-stroke: var(--gd-text-stroke); text-shadow: var(--gd-text-shadow); }
+    .demon-link { color: #00ffff !important; text-decoration: underline; }
   </style>
 </head>
 
@@ -208,14 +200,10 @@
 
   <div class="game-window">
     <div class="page-indicator" id="page-text">PAGE 1</div>
-    
     <div class="hub-frame-overlay"></div>
 
-    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" 
-         id="prev-btn" class="nav-arrow" onclick="changePage(-1)" alt="Back">
-    
-    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" 
-         id="next-btn" class="nav-arrow" onclick="changePage(1)" alt="Next">
+    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
+    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
 
     <div id="level-list" class="content-viewport active"></div>
 
@@ -228,31 +216,41 @@
   </div>
 
   <script>
+    const faces = {
+      easy: "https://geometrydash.wiki.gg/images/Easy.png",
+      normal: "https://geometrydash.wiki.gg/images/Normal.png",
+      hard: "https://geometrydash.wiki.gg/images/Hard.png",
+      harder: "https://geometrydash.wiki.gg/images/Harder.png",
+      insane: "https://geometrydash.wiki.gg/images/Insane.png",
+      easyDemon: "https://geometrydash.wiki.gg/images/EasyDemon.png",
+      extremeDemon: "https://geometrydash.wiki.gg/images/ExtremeDemon.png"
+    };
+
     const levels = [
-      { name: "Import Level", creator: "Custom ID", id: "custom", style: "import-style" },
-      { name: "Stereo Madness", creator: "RobTop", id: "-1" },
-      { name: "Back on Track", creator: "RobTop", id: "-2" },
-      { name: "Polargeist", creator: "RobTop", id: "-3" },
-      { name: "Dry Out", creator: "RobTop", id: "-4" },
-      { name: "Base after Base", creator: "RobTop", id: "-5" },
-      { name: "Cant Let Go", creator: "RobTop", id: "-6" },
-      { name: "Jumper", creator: "RobTop", id: "-7" },
-      { name: "Time Machine", creator: "RobTop", id: "-8" },
-      { name: "Cycles", creator: "RobTop", id: "-9" },
-      { name: "xStep", creator: "RobTop", id: "-10" },
-      { name: "Clutterfunk", creator: "RobTop", id: "-11" },
-      { name: "Theory of Everything", creator: "RobTop", id: "-12" },
-      { name: "Electroman Adventures", creator: "RobTop", id: "-13" },
-      { name: "Clubstep", creator: "RobTop", id: "-14" },
-      { name: "Electrodynamix", creator: "RobTop", id: "-15" },
-      { name: "Hexagon Force", creator: "RobTop", id: "-16" },
-      { name: "Blast Processing", creator: "RobTop", id: "-17" },
-      { name: "Theory of Everything 2", creator: "RobTop", id: "-18" },
-      { name: "Geometrical Dominator", creator: "RobTop", id: "-19" },
-      { name: "Deadlocked", creator: "RobTop", id: "-20" },
-      { name: "Fingerdash", creator: "RobTop", id: "-21" },
-      { name: "Dash", creator: "RobTop", id: "-22" },
-      { name: "Every End", creator: "MindCap", id: "-23", style: "every-end-style" }
+      { name: "Import Level", creator: "Custom ID", id: "custom", style: "import-style", face: faces.normal, diff: "NA" },
+      { name: "Stereo Madness", creator: "RobTop", id: "-1", face: faces.easy, diff: "Easy" },
+      { name: "Back on Track", creator: "RobTop", id: "-2", face: faces.easy, diff: "Easy" },
+      { name: "Polargeist", creator: "RobTop", id: "-3", face: faces.normal, diff: "Normal" },
+      { name: "Dry Out", creator: "RobTop", id: "-4", face: faces.normal, diff: "Normal" },
+      { name: "Base after Base", creator: "RobTop", id: "-5", face: faces.hard, diff: "Hard" },
+      { name: "Cant Let Go", creator: "RobTop", id: "-6", face: faces.hard, diff: "Hard" },
+      { name: "Jumper", creator: "RobTop", id: "-7", face: faces.harder, diff: "Harder" },
+      { name: "Time Machine", creator: "RobTop", id: "-8", face: faces.harder, diff: "Harder" },
+      { name: "Cycles", creator: "RobTop", id: "-9", face: faces.harder, diff: "Harder" },
+      { name: "xStep", creator: "RobTop", id: "-10", face: faces.insane, diff: "Insane" },
+      { name: "Clutterfunk", creator: "RobTop", id: "-11", face: faces.insane, diff: "Insane" },
+      { name: "Theory of Everything", creator: "RobTop", id: "-12", face: faces.insane, diff: "Insane" },
+      { name: "Electroman Adventures", creator: "RobTop", id: "-13", face: faces.insane, diff: "Insane" },
+      { name: "Clubstep", creator: "RobTop", id: "-14", face: faces.easyDemon, diff: "Demon" },
+      { name: "Electrodynamix", creator: "RobTop", id: "-15", face: faces.insane, diff: "Insane" },
+      { name: "Hexagon Force", creator: "RobTop", id: "-16", face: faces.insane, diff: "Insane" },
+      { name: "Blast Processing", creator: "RobTop", id: "-17", face: faces.harder, diff: "Harder" },
+      { name: "Theory of Everything 2", creator: "RobTop", id: "-18", face: faces.easyDemon, diff: "Demon" },
+      { name: "Geometrical Dominator", creator: "RobTop", id: "-19", face: faces.harder, diff: "Harder" },
+      { name: "Deadlocked", creator: "RobTop", id: "-20", face: faces.easyDemon, diff: "Demon" },
+      { name: "Fingerdash", creator: "RobTop", id: "-21", face: faces.insane, diff: "Insane" },
+      { name: "Dash", creator: "RobTop", id: "-22", face: faces.insane, diff: "Insane" },
+      { name: "Every End", creator: "RobTop", id: "-23", style: "every-end-style", face: faces.extremeDemon, diff: "Extreme" }
     ];
 
     let currentPage = 0;
@@ -273,7 +271,11 @@
         row.className = `level-item ${item.style || ''}`;
         
         row.innerHTML = `
-          <div class="level-info">
+          <div class="difficulty-container">
+            <img src="${item.face}" class="difficulty-face">
+            <span class="difficulty-label">${item.diff}</span>
+          </div>
+          <div class="level-main-info">
             <p class="level-name">${item.name}</p>
             <span class="level-creator">BY ${item.creator.toUpperCase()}</span>
           </div>
@@ -291,7 +293,7 @@
         document.getElementById('page-text').style.display = 'block';
         document.getElementById('page-text').innerText = `PAGE ${currentPage + 1}`;
         document.getElementById('prev-btn').style.display = currentPage === 0 ? 'none' : 'block';
-        document.getElementById('next-btn').style.display = endIndex >= levels.length ? 'none' : 'block';
+        document.getElementById('next-btn').style.display = (endIndex && endIndex >= levels.length) ? 'none' : 'block';
       } else {
         document.getElementById('page-text').style.display = 'none';
         document.getElementById('prev-btn').style.display = 'none';
