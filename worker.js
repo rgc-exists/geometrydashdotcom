@@ -34,7 +34,6 @@ self.addEventListener("fetch", (event) => {
         console.error("Could not download song ID from GD music");
       }
     }
-    event.respondWith(resp);
     return;
   }
 });
