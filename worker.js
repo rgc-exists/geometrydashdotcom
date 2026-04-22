@@ -13,15 +13,15 @@ self.addEventListener("install", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.pathname.includes("1.txt")) {
-    event.respondWith(Promise.resolve(levelString));
+    event.respondWith(new Response(levelString), {
+      headers: { "Content-Type": "text/plain" },
+    });
     return;
   }
 
   if (url.pathname.includes("StereoMadness.mp3")) {
     event.respondWith(
-      event.respondWith(
-        fetch(`https://www.newgrounds.com/audio/download/${songID}`),
-      ),
+      fetch(`https://www.newgrounds.com/audio/download/${songID}`),
     );
     return;
   }
