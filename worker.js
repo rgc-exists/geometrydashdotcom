@@ -20,8 +20,10 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.includes("StereoMadness.mp3")) {
+    // PLACEHOLDER
+    console.log("Using the Retray song as a placeholder lmao");
     event.respondWith(
-      fetch(`https://www.newgrounds.com/audio/download/${songID}`),
+      fetch(`https://getlevelsong.lasokar.workers.dev?id=6508283`),
     );
     return;
   }
