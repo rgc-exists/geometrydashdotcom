@@ -8,7 +8,7 @@
   <style>
     @font-face {
       font-family: 'Pusab';
-      src: url('/font/pusab.woff2') format('woff2');
+      src: url('font/pusab.woff2') format('woff2');
     }
 
     :root {
@@ -88,7 +88,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('/img/Hubv2.png');
+      background: url('img/Hubv2.png');
       background-size: 100% 100%;
       z-index: 10;
       pointer-events: none;
@@ -199,8 +199,8 @@
     <div class="page-indicator" id="page-text">PAGE 1</div>
     <div class="hub-frame-overlay"></div>
 
-    <img src="/img/Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
-    <img src="/img/Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
+    <img src="img/Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
+    <img src="img/Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
 
     <div id="level-list" class="content-viewport active"></div>
 
@@ -276,7 +276,7 @@
             <p class="level-name">${item.name}</p>
             <span class="level-creator">BY ${item.creator.toUpperCase()}</span>
           </div>
-          <img src="/img/Play.webp" 
+          <img src="img/Play.webp" 
                class="play-btn" onclick="handleInteraction('${item.id}')">
         `;
         container.appendChild(row);
