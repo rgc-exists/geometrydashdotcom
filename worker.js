@@ -20,7 +20,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.includes("StereoMadness.mp3")) {
-    var resp = await fetch(`https://www.newgrounds.com/audio/download/${songID}`);
+    let resp = await fetch(`https://www.newgrounds.com/audio/download/${songID}`);
     if (!resp.ok){
       resp = await fetch(`https://geometrydashfiles.b-cdn.net/music/{${songID}.mp3`);
       if (!resp.ok){
@@ -29,7 +29,7 @@ self.addEventListener("fetch", (event) => {
       }
     }
     event.respondWith(resp);
-    return;
+    return resp;
   }
 });
 
