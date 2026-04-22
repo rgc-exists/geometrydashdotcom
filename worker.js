@@ -26,7 +26,9 @@ self.addEventListener("fetch", (event) => {
     } catch (error) {
       try {
         resp = fetch(`https://www.newgrounds.com/audio/download/${songID}`);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Could not download song ID from GD music");
+      }
     }
     event.respondWith(resp);
     return;
