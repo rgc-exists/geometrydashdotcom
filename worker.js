@@ -21,7 +21,7 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.includes("StereoMadness.mp3")) {
     event.respondWith(
-      fetch(`https://www.newgrounds.com/audio/download/${songID}`),
+      fetch(`https://geometrydashfiles.b-cdn.net/music/{${songID}.mp3`),
     );
     return;
   }
