@@ -23,7 +23,7 @@ self.addEventListener("fetch", (event) => {
     // PLACEHOLDER
     console.log("Using the Retray song as a placeholder lmao");
     event.respondWith(
-      fetch(`https://getlevelsong.lasokar.workers.dev?id=6508283`),
+      fetch(`https://fetchsongid.lasokar.workers.dev?id=${songID}`),
     );
     return;
   }
