@@ -20,20 +20,9 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.includes("StereoMadness.mp3")) {
-    var resp = null;
-    try {
-      resp = event.respondWith(
-        fetch(`https://geometrydashfiles.b-cdn.net/music/{${songID}.mp3`),
-      );
-    } catch (error) {
-      try {
-        resp = event.respondWith(
-          fetch(`https://www.newgrounds.com/audio/download/${songID}`),
-        );
-      } catch (error) {
-        console.error("Could not download song ID from GD music");
-      }
-    }
+    event.respondWith(
+      fetch(`https://www.newgrounds.com/audio/download/${songID}`),
+    );
     return;
   }
 });
