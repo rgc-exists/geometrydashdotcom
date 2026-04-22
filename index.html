@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Geometry Dash Menu</title>
+  <title>Geometry Dash Web</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
-    /* Loading Pusab Font */
     @font-face {
       font-family: 'Pusab';
       src: url('https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Pusab%20full.woff2') format('woff2');
@@ -17,8 +17,6 @@
       --panel-brown: #bc6d3d;
       --panel-brown-dark: #a1582c;
       --every-end-blue: #050a1a; 
-
-      /* GD Text Style: Black stroke + Black offset shadow */
       --gd-text-stroke: 1.5px black;
       --gd-text-shadow: 3px 3px 0px rgba(0,0,0,1);
     }
@@ -111,7 +109,6 @@
     .import-style { background: #468d49 !important; }
     .every-end-style { background: var(--every-end-blue) !important; border-bottom: 2.5px solid #000 !important; }
 
-    /* Difficulty Face Styling */
     .difficulty-container {
       display: flex;
       flex-direction: column;
@@ -202,8 +199,8 @@
     <div class="page-indicator" id="page-text">PAGE 1</div>
     <div class="hub-frame-overlay"></div>
 
-    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
-    <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
+    <img src="Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
+    <img src="Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
 
     <div id="level-list" class="content-viewport active"></div>
 
@@ -250,7 +247,7 @@
       { name: "Deadlocked", creator: "RobTop", id: "-20", face: faces.easyDemon, diff: "Demon" },
       { name: "Fingerdash", creator: "RobTop", id: "-21", face: faces.insane, diff: "Insane" },
       { name: "Dash", creator: "RobTop", id: "-22", face: faces.insane, diff: "Insane" },
-      { name: "Every End", creator: "RobTop", id: "-23", style: "every-end-style", face: faces.extremeDemon, diff: "Extreme" }
+      { name: "Every End", creator: "MindCap", id: "-23", style: "every-end-style", face: faces.extremeDemon, diff: "Extreme" }
     ];
 
     let currentPage = 0;
@@ -279,7 +276,7 @@
             <p class="level-name">${item.name}</p>
             <span class="level-creator">BY ${item.creator.toUpperCase()}</span>
           </div>
-          <img src="https://lwepgqwnwivcwefwlxhw.supabase.co/storage/v1/object/public/Music2/Play%20button.webp" 
+          <img src="Play.webp" 
                class="play-btn" onclick="handleInteraction('${item.id}')">
         `;
         container.appendChild(row);
