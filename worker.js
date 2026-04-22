@@ -28,7 +28,6 @@ self.addEventListener("fetch", (event) => {
         return;
       }
     }
-    event.respondWith(resp);
     return resp;
   }
 });
