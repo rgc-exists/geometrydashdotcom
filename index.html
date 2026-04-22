@@ -1,273 +1,492 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Geometry Dash Web</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <style>
-    @font-face {
-      font-family: 'Pusab';
-      src: url('font/pusab.woff2') format('woff2');
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Geometry Dash Web</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <style>
+      @font-face {
+        font-family: "Pusab";
+        src: url("font/pusab.woff2") format("woff2");
+      }
 
-    :root {
-      --bg-blue: #2854cf;
-      --bg-blue-dark: #112661;
-      --panel-brown: #bc6d3d;
-      --panel-brown-dark: #a1582c;
-      --every-end-blue: #050a1a; 
-      --gd-text-stroke: 1.5px black;
-      --gd-text-shadow: 3px 3px 0px rgba(0,0,0,1);
-    }
+      :root {
+        --bg-blue: #2854cf;
+        --bg-blue-dark: #112661;
+        --panel-brown: #bc6d3d;
+        --panel-brown-dark: #a1582c;
+        --every-end-blue: #050a1a;
+        --gd-text-stroke: 1.5px black;
+        --gd-text-shadow: 3px 3px 0px rgba(0, 0, 0, 1);
+      }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle, var(--bg-blue) 0%, var(--bg-blue-dark) 100%);
-      color: white;
-      font-family: 'Pusab', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      user-select: none;
-    }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(
+          circle,
+          var(--bg-blue) 0%,
+          var(--bg-blue-dark) 100%
+        );
+        color: white;
+        font-family: "Pusab", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        user-select: none;
+      }
 
-    nav {
-      position: absolute;
-      top: 20px;
-      display: flex;
-      gap: 15px;
-      z-index: 100;
-    }
+      nav {
+        position: absolute;
+        top: 20px;
+        display: flex;
+        gap: 15px;
+        z-index: 100;
+      }
 
-    .tab-btn {
-      background: rgba(0, 0, 0, 0.7);
-      border: 3px solid white;
-      color: white;
-      font-family: 'Pusab', sans-serif;
-      font-size: 14px;
-      padding: 8px 25px;
-      cursor: pointer;
-      border-radius: 4px;
-      -webkit-text-stroke: 1px black;
-      text-shadow: 2px 2px 0px black;
-    }
+      .tab-btn {
+        background: rgba(0, 0, 0, 0.7);
+        border: 3px solid white;
+        color: white;
+        font-family: "Pusab", sans-serif;
+        font-size: 14px;
+        padding: 8px 25px;
+        cursor: pointer;
+        border-radius: 4px;
+        -webkit-text-stroke: 1px black;
+        text-shadow: 2px 2px 0px black;
+      }
 
-    .tab-btn.active { background: #ffaa00; }
+      .tab-btn.active {
+        background: #ffaa00;
+      }
 
-    .game-window {
-      position: relative;
-      width: 90vw;
-      max-width: 950px;
-      aspect-ratio: 16 / 9;
-    }
+      .game-window {
+        position: relative;
+        width: 90vw;
+        max-width: 950px;
+        aspect-ratio: 16 / 9;
+      }
 
-    .content-viewport {
-      position: absolute;
-      top: 6.5%; 
-      left: 5%;
-      right: 5%;
-      bottom: 8.5%;
-      z-index: 1; 
-      background: #8e4f2b; 
-      overflow-y: scroll;
-      overflow-x: hidden;
-      scrollbar-width: none;
-      display: none; 
-    }
+      .content-viewport {
+        position: absolute;
+        top: 6.5%;
+        left: 5%;
+        right: 5%;
+        bottom: 8.5%;
+        z-index: 1;
+        background: #8e4f2b;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        display: none;
+      }
 
-    .content-viewport.active { display: flex; flex-direction: column; }
-    .content-viewport::-webkit-scrollbar { display: none; }
+      .content-viewport.active {
+        display: flex;
+        flex-direction: column;
+      }
+      .content-viewport::-webkit-scrollbar {
+        display: none;
+      }
 
-    .hub-frame-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('img/Hubv2.png');
-      background-size: 100% 100%;
-      z-index: 10;
-      pointer-events: none;
-    }
+      .hub-frame-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("img/Hubv2.png");
+        background-size: 100% 100%;
+        z-index: 10;
+        pointer-events: none;
+      }
 
-    .level-item {
-      height: 33.33%; 
-      flex-shrink: 0;
-      background: var(--panel-brown);
-      display: flex;
-      align-items: center;
-      padding: 0 30px;
-      border-bottom: 2.5px solid rgba(0,0,0,0.3);
-      box-sizing: border-box;
-    }
+      .level-item {
+        height: 33.33%;
+        flex-shrink: 0;
+        background: var(--panel-brown);
+        display: flex;
+        align-items: center;
+        padding: 0 30px;
+        border-bottom: 2.5px solid rgba(0, 0, 0, 0.3);
+        box-sizing: border-box;
+      }
 
-    .level-item:nth-child(even) { background: var(--panel-brown-dark); }
-    .import-style { background: #468d49 !important; }
-    .every-end-style { background: var(--every-end-blue) !important; border-bottom: 2.5px solid #000 !important; }
+      .level-item:nth-child(even) {
+        background: var(--panel-brown-dark);
+      }
+      .import-style {
+        background: #468d49 !important;
+      }
+      .every-end-style {
+        background: var(--every-end-blue) !important;
+        border-bottom: 2.5px solid #000 !important;
+      }
 
-    .difficulty-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 80px;
-      margin-right: 20px;
-    }
+      .difficulty-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80px;
+        margin-right: 20px;
+      }
 
-    .difficulty-face {
-      width: 55px;
-      height: auto;
-    }
+      .difficulty-face {
+        width: 55px;
+        height: auto;
+      }
 
-    .difficulty-label {
-      font-size: 10px;
-      margin-top: 4px;
-      text-transform: uppercase;
-      -webkit-text-stroke: 1px black;
-      text-shadow: 1px 1px 0px black;
-    }
+      .difficulty-label {
+        font-size: 10px;
+        margin-top: 4px;
+        text-transform: uppercase;
+        -webkit-text-stroke: 1px black;
+        text-shadow: 1px 1px 0px black;
+      }
 
-    .level-main-info {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
+      .level-main-info {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .level-name {
-      font-size: 26px;
-      margin: 0;
-      text-transform: uppercase;
-      -webkit-text-stroke: var(--gd-text-stroke);
-      text-shadow: var(--gd-text-shadow);
-    }
+      .level-name {
+        font-size: 26px;
+        margin: 0;
+        text-transform: uppercase;
+        -webkit-text-stroke: var(--gd-text-stroke);
+        text-shadow: var(--gd-text-shadow);
+      }
 
-    .level-creator {
-      font-size: 16px;
-      color: #fdc416;
-      -webkit-text-stroke: var(--gd-text-stroke);
-      text-shadow: var(--gd-text-shadow);
-      margin-top: 3px;
-    }
+      .level-creator {
+        font-size: 16px;
+        color: #fdc416;
+        -webkit-text-stroke: var(--gd-text-stroke);
+        text-shadow: var(--gd-text-shadow);
+        margin-top: 3px;
+      }
 
-    .play-btn {
-      width: 105px;
-      cursor: pointer;
-      pointer-events: auto;
-      transition: transform 0.1s;
-    }
-    .play-btn:hover { transform: scale(1.05); }
+      .play-btn {
+        width: 105px;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: transform 0.1s;
+      }
+      .play-btn:hover {
+        transform: scale(1.05);
+      }
 
-    .nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 75px;
-      cursor: pointer;
-      z-index: 20;
-    }
+      .nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 75px;
+        cursor: pointer;
+        z-index: 20;
+      }
 
-    #prev-btn { left: -90px; transform: translateY(-50%) scaleX(-1); }
-    #next-btn { right: -90px; }
+      #prev-btn {
+        left: -90px;
+        transform: translateY(-50%) scaleX(-1);
+      }
+      #next-btn {
+        right: -90px;
+      }
 
-    .page-indicator {
-      position: absolute;
-      top: -35px;
-      right: 10px;
-      font-size: 20px;
-      -webkit-text-stroke: 1px black;
-      text-shadow: 2px 2px 0px black;
-    }
+      .page-indicator {
+        position: absolute;
+        top: -35px;
+        right: 10px;
+        font-size: 20px;
+        -webkit-text-stroke: 1px black;
+        text-shadow: 2px 2px 0px black;
+      }
 
-    .demon-container { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-    .demon-title { font-size: 32px; -webkit-text-stroke: var(--gd-text-stroke); text-shadow: var(--gd-text-shadow); }
-    .demon-desc { font-size: 18px; color: #fdc416; -webkit-text-stroke: var(--gd-text-stroke); text-shadow: var(--gd-text-shadow); }
-    .demon-link { color: #00ffff !important; text-decoration: underline; }
-  </style>
-</head>
+      .demon-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+      .demon-title {
+        font-size: 32px;
+        -webkit-text-stroke: var(--gd-text-stroke);
+        text-shadow: var(--gd-text-shadow);
+      }
+      .demon-desc {
+        font-size: 18px;
+        color: #fdc416;
+        -webkit-text-stroke: var(--gd-text-stroke);
+        text-shadow: var(--gd-text-shadow);
+      }
+      .demon-link {
+        color: #00ffff !important;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
 
-<body>
+  <body>
+    <nav>
+      <button
+        id="tab-levels"
+        class="tab-btn active"
+        onclick="openTab('levels')"
+      >
+        LEVELS
+      </button>
+      <button id="tab-demonlist" class="tab-btn" onclick="openTab('demonlist')">
+        WBDL
+      </button>
+    </nav>
 
-  <nav>
-    <button id="tab-levels" class="tab-btn active" onclick="openTab('levels')">LEVELS</button>
-    <button id="tab-demonlist" class="tab-btn" onclick="openTab('demonlist')">WBDL</button>
-  </nav>
+    <div class="game-window">
+      <div class="page-indicator" id="page-text">PAGE 1</div>
+      <div class="hub-frame-overlay"></div>
 
-  <div class="game-window">
-    <div class="page-indicator" id="page-text">PAGE 1</div>
-    <div class="hub-frame-overlay"></div>
+      <img
+        src="img/Next.png"
+        id="prev-btn"
+        class="nav-arrow"
+        onclick="changePage(-1)"
+      />
+      <img
+        src="img/Next.png"
+        id="next-btn"
+        class="nav-arrow"
+        onclick="changePage(1)"
+      />
 
-    <img src="img/Next.png" id="prev-btn" class="nav-arrow" onclick="changePage(-1)">
-    <img src="img/Next.png" id="next-btn" class="nav-arrow" onclick="changePage(1)">
+      <div id="level-list" class="content-viewport active"></div>
 
-    <div id="level-list" class="content-viewport active"></div>
-
-    <div id="demonlist-content" class="content-viewport">
-      <div class="demon-container">
-        <h2 class="demon-title">Web Browser Demonlist</h2>
-        <p class="demon-desc">Visit the <a href="https://webdemonlist.org/" target="_blank" class="demon-link">WBDL website</a><br>to see the rankings :O</p>
+      <div id="demonlist-content" class="content-viewport">
+        <div class="demon-container">
+          <h2 class="demon-title">Web Browser Demonlist</h2>
+          <p class="demon-desc">
+            Visit the
+            <a
+              href="https://webdemonlist.org/"
+              target="_blank"
+              class="demon-link"
+              >WBDL website</a
+            ><br />to see the rankings :O
+          </p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    const faces = {
-      easy: "img/Easy.webp",
-      normal: "img/Normal.webp",
-      hard: "img/Hard.webp",
-      harder: "img/Harder.webp",
-      insane: "img/Insane.webp",
-      easyDemon: "img/EasyDemon.webp",
-      extremeDemon: "img/ExtremeDemon.webp"
-    };
+    <script>
+      var lvl = String(new URLSearchParams(location.search).get("string"));
+      var song = Number(new URLSearchParams(location.search).get("songID"));
 
-    const levels = [
-      { name: "Import Level", creator: "Custom ID", id: "custom", style: "import-style", face: faces.normal, diff: "NA" },
-      { name: "Stereo Madness", creator: "RobTop", id: "-1", face: faces.easy, diff: "Easy" },
-      { name: "Back on Track", creator: "RobTop", id: "-2", face: faces.easy, diff: "Easy" },
-      { name: "Polargeist", creator: "RobTop", id: "-3", face: faces.normal, diff: "Normal" },
-      { name: "Dry Out", creator: "RobTop", id: "-4", face: faces.normal, diff: "Normal" },
-      { name: "Base after Base", creator: "RobTop", id: "-5", face: faces.hard, diff: "Hard" },
-      { name: "Cant Let Go", creator: "RobTop", id: "-6", face: faces.hard, diff: "Hard" },
-      { name: "Jumper", creator: "RobTop", id: "-7", face: faces.harder, diff: "Harder" },
-      { name: "Time Machine", creator: "RobTop", id: "-8", face: faces.harder, diff: "Harder" },
-      { name: "Cycles", creator: "RobTop", id: "-9", face: faces.harder, diff: "Harder" },
-      { name: "xStep", creator: "RobTop", id: "-10", face: faces.insane, diff: "Insane" },
-      { name: "Clutterfunk", creator: "RobTop", id: "-11", face: faces.insane, diff: "Insane" },
-      { name: "Theory of Everything", creator: "RobTop", id: "-12", face: faces.insane, diff: "Insane" },
-      { name: "Electroman Adventures", creator: "RobTop", id: "-13", face: faces.insane, diff: "Insane" },
-      { name: "Clubstep", creator: "RobTop", id: "-14", face: faces.easyDemon, diff: "Demon" },
-      { name: "Electrodynamix", creator: "RobTop", id: "-15", face: faces.insane, diff: "Insane" },
-      { name: "Hexagon Force", creator: "RobTop", id: "-16", face: faces.insane, diff: "Insane" },
-      { name: "Blast Processing", creator: "RobTop", id: "-17", face: faces.harder, diff: "Harder" },
-      { name: "Theory of Everything 2", creator: "RobTop", id: "-18", face: faces.easyDemon, diff: "Demon" },
-      { name: "Geometrical Dominator", creator: "RobTop", id: "-19", face: faces.harder, diff: "Harder" },
-      { name: "Deadlocked", creator: "RobTop", id: "-20", face: faces.easyDemon, diff: "Demon" },
-      { name: "Fingerdash", creator: "RobTop", id: "-21", face: faces.insane, diff: "Insane" },
-      { name: "Dash", creator: "RobTop", id: "-22", face: faces.insane, diff: "Insane" },
-      { name: "Every End", creator: "MindCap", id: "-23", style: "every-end-style", face: faces.extremeDemon, diff: "Extreme" }
-    ];
+      const faces = {
+        easy: "img/Easy.webp",
+        normal: "img/Normal.webp",
+        hard: "img/Hard.webp",
+        harder: "img/Harder.webp",
+        insane: "img/Insane.webp",
+        easyDemon: "img/EasyDemon.webp",
+        extremeDemon: "img/ExtremeDemon.webp",
+      };
 
-    let currentPage = 0;
-    const itemsPerPage = 10;
-    let currentTab = 'levels';
+      const levels = [
+        {
+          name: "Import Level",
+          creator: "Custom ID",
+          id: "custom",
+          style: "import-style",
+          face: faces.normal,
+          diff: "NA",
+        },
+        {
+          name: "Stereo Madness",
+          creator: "RobTop",
+          id: "-1",
+          face: faces.easy,
+          diff: "Easy",
+        },
+        {
+          name: "Back on Track",
+          creator: "RobTop",
+          id: "-2",
+          face: faces.easy,
+          diff: "Easy",
+        },
+        {
+          name: "Polargeist",
+          creator: "RobTop",
+          id: "-3",
+          face: faces.normal,
+          diff: "Normal",
+        },
+        {
+          name: "Dry Out",
+          creator: "RobTop",
+          id: "-4",
+          face: faces.normal,
+          diff: "Normal",
+        },
+        {
+          name: "Base after Base",
+          creator: "RobTop",
+          id: "-5",
+          face: faces.hard,
+          diff: "Hard",
+        },
+        {
+          name: "Cant Let Go",
+          creator: "RobTop",
+          id: "-6",
+          face: faces.hard,
+          diff: "Hard",
+        },
+        {
+          name: "Jumper",
+          creator: "RobTop",
+          id: "-7",
+          face: faces.harder,
+          diff: "Harder",
+        },
+        {
+          name: "Time Machine",
+          creator: "RobTop",
+          id: "-8",
+          face: faces.harder,
+          diff: "Harder",
+        },
+        {
+          name: "Cycles",
+          creator: "RobTop",
+          id: "-9",
+          face: faces.harder,
+          diff: "Harder",
+        },
+        {
+          name: "xStep",
+          creator: "RobTop",
+          id: "-10",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Clutterfunk",
+          creator: "RobTop",
+          id: "-11",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Theory of Everything",
+          creator: "RobTop",
+          id: "-12",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Electroman Adventures",
+          creator: "RobTop",
+          id: "-13",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Clubstep",
+          creator: "RobTop",
+          id: "-14",
+          face: faces.easyDemon,
+          diff: "Demon",
+        },
+        {
+          name: "Electrodynamix",
+          creator: "RobTop",
+          id: "-15",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Hexagon Force",
+          creator: "RobTop",
+          id: "-16",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Blast Processing",
+          creator: "RobTop",
+          id: "-17",
+          face: faces.harder,
+          diff: "Harder",
+        },
+        {
+          name: "Theory of Everything 2",
+          creator: "RobTop",
+          id: "-18",
+          face: faces.easyDemon,
+          diff: "Demon",
+        },
+        {
+          name: "Geometrical Dominator",
+          creator: "RobTop",
+          id: "-19",
+          face: faces.harder,
+          diff: "Harder",
+        },
+        {
+          name: "Deadlocked",
+          creator: "RobTop",
+          id: "-20",
+          face: faces.easyDemon,
+          diff: "Demon",
+        },
+        {
+          name: "Fingerdash",
+          creator: "RobTop",
+          id: "-21",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Dash",
+          creator: "RobTop",
+          id: "-22",
+          face: faces.insane,
+          diff: "Insane",
+        },
+        {
+          name: "Every End",
+          creator: "MindCap",
+          id: "-23",
+          style: "every-end-style",
+          face: faces.extremeDemon,
+          diff: "Extreme",
+        },
+      ];
 
-    function renderPage() {
-      const container = document.getElementById('level-list');
-      container.innerHTML = '';
-      container.scrollTop = 0; 
-      
-      const start = currentPage * itemsPerPage;
-      const end = start + itemsPerPage;
-      const pageItems = levels.slice(start, end);
+      let currentPage = 0;
+      const itemsPerPage = 10;
+      let currentTab = "levels";
+      /*
+      function renderPage() {
+        const container = document.getElementById("level-list");
+        container.innerHTML = "";
+        container.scrollTop = 0;
 
-      pageItems.forEach(item => {
-        const row = document.createElement('div');
-        row.className = `level-item ${item.style || ''}`;
-        
-        row.innerHTML = `
+        const start = currentPage * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageItems = levels.slice(start, end);
+
+        pageItems.forEach((item) => {
+          const row = document.createElement("div");
+          row.className = `level-item ${item.style || ""}`;
+
+          row.innerHTML = `
           <div class="difficulty-container">
             <img src="${item.face}" class="difficulty-face">
             <span class="difficulty-label">${item.diff}</span>
@@ -279,60 +498,71 @@
           <img src="img/Play.webp" 
                class="play-btn" onclick="handleInteraction('${item.id}')">
         `;
-        container.appendChild(row);
-      });
+          container.appendChild(row);
+        });
 
-      updateUI(end);
-    }
-
-    function updateUI(endIndex) {
-      if (currentTab === 'levels') {
-        document.getElementById('page-text').style.display = 'block';
-        document.getElementById('page-text').innerText = `PAGE ${currentPage + 1}`;
-        document.getElementById('prev-btn').style.display = currentPage === 0 ? 'none' : 'block';
-        document.getElementById('next-btn').style.display = (endIndex && endIndex >= levels.length) ? 'none' : 'block';
-      } else {
-        document.getElementById('page-text').style.display = 'none';
-        document.getElementById('prev-btn').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'none';
+        updateUI(end);
       }
-    }
 
-    function openTab(tabName) {
-      currentTab = tabName;
-      document.querySelectorAll('.content-viewport').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      function updateUI(endIndex) {
+        if (currentTab === "levels") {
+          document.getElementById("page-text").style.display = "block";
+          document.getElementById("page-text").innerText =
+            `PAGE ${currentPage + 1}`;
+          document.getElementById("prev-btn").style.display =
+            currentPage === 0 ? "none" : "block";
+          document.getElementById("next-btn").style.display =
+            endIndex && endIndex >= levels.length ? "none" : "block";
+        } else {
+          document.getElementById("page-text").style.display = "none";
+          document.getElementById("prev-btn").style.display = "none";
+          document.getElementById("next-btn").style.display = "none";
+        }
+      }
 
-      if (tabName === 'levels') {
-        document.getElementById('level-list').classList.add('active');
-        document.getElementById('tab-levels').classList.add('active');
+      function openTab(tabName) {
+        currentTab = tabName;
+        document
+          .querySelectorAll(".content-viewport")
+          .forEach((v) => v.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        if (tabName === "levels") {
+          document.getElementById("level-list").classList.add("active");
+          document.getElementById("tab-levels").classList.add("active");
+          renderPage();
+        } else {
+          document.getElementById("demonlist-content").classList.add("active");
+          document.getElementById("tab-demonlist").classList.add("active");
+          updateUI();
+        }
+      }
+
+      function changePage(dir) {
+        currentPage += dir;
         renderPage();
-      } else {
-        document.getElementById('demonlist-content').classList.add('active');
-        document.getElementById('tab-demonlist').classList.add('active');
-        updateUI();
       }
-    }
 
-    function changePage(dir) {
-      currentPage += dir;
-      renderPage();
-    }
-
-    function handleInteraction(id) {
-      if (id === 'custom') {
-        const val = prompt("Enter Level ID:");
-        if (val && !isNaN(val)) loadLevel(val);
-      } else {
-        loadLevel(id);
+      /*
+      function handleInteraction(id) {
+        if (id === "custom") {
+          const val = prompt("Enter Level ID:");
+          if (val && !isNaN(val)) loadLevel(val);
+        } else {
+          loadLevel(id);
+        }
       }
-    }
+      */
 
-    function loadLevel(id) {
-      window.location.href = `/geometrydashdotcom/game?id=${id}`;
-    }
+      function loadLevel(levelString, songID) {
+        window.location.href = `/geometrydashdotcom/game?songID=${songID}&string=${levelString}`;
+      }
 
-    renderPage();
-  </script>
-</body>
+      loadLevel(lvl, song);
+
+      // renderPage();
+    </script>
+  </body>
 </html>
